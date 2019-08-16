@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			#content{
+				margin:20px auto;
+			}
+		</style>
+		<link rel="stylesheet" href="layui/css/layui.css" />
+		<script type="text/javascript" src="layui/layui.js" ></script>
+		<script type="text/javascript" src="js/jquery-1.12.2.min.js" ></script>
+	</head>
+	<body>
+		<div id="content">
+		<div class="layui-form searchDiv">
+			<div class="layui-form-item">
+				<div class="layui-inline">
+					<label class="layui-form-label">开始日期</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" id="test1" placeholder="yyyy-MM-dd">
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">结束日期</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" id="test2" placeholder="yyyy-MM-dd">
+					</div>
+				</div>
+				<button type="button" class="layui-btn" data-type="reload">搜索</button>
+			</div>
+		</div>
+		<table class="layui-hide" id="demo" lay-filter="test"></table>
+		</div>
+		<script>
+			layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element', 'slider'], function(){
+  var laydate = layui.laydate //日期
+  ,laypage = layui.laypage //分页
+  ,layer = layui.layer //弹层
+  ,table = layui.table //表格
+  ,element = layui.element //元素操作
+
+                laydate.render({
+                    elem: '#test1'
+                });
+                laydate.render({
+                    elem: '#test2'
+                });
+
+  
+  //执行一个 table 实例
+  table.render({
+    elem: '#demo'
+	  ,id:"transferTable"
+    ,height: 420
+    ,url: 'trade/list.do' //数据接口
+    ,title: '用户表'
+    ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+          layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+          //,curr: 5 //设定初始在第 5 页
+          //,groups: 1 //只显示 1 个连续页码
+          ,first: false //不显示首页
+          ,last: false //不显示尾页
+		  ,limits:[5,10,20]
+
+      } //开启分页
+    ,cols: [[ //表头
+   		{field: 'createTime', title: '交易时间', width:200, sort: true, fixed: 'left'}
+      ,{field: 'income', title: '收入', width:100}
+      ,{field: 'pay', title: '支出', width:100, sort: true}
+      ,{field: 'consumType', title: '交易类型', width:100, sort: true}
+      ,{field: 'balance', title: '余额', width:150, sort: true}
+      ,{field: 'comment', title: '备注', width:200, sort: true}
+
+    ]]
+  });
+
+                var active = {
+                    reload: function(){
+                        //执行重载
+                        table.reload('transferTable', {
+                            page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                            ,where: { // 额外需要提交的参数
+								beginTime:$("#test1").val(),
+								endTime:$("#test2").val(),
+                            }
+                        });
+                    }
+                };
+
+                $('.searchDiv .layui-btn').on('click', function(){
+                    var type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+})
+</script>
+	</body>
+</html>

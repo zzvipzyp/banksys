@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+
+        <form action="upload.do" method="post" enctype="multipart/form-data">
+            <input type="file" name="upfile" /><br />
+            <input type="text" name="name" /><br />
+            <input type="submit" value="上传" /><br />
+
+        </form>
+        <a href="download.do?fileName=yuxiang.jpg">下载</a>
+        <a href="download.do?fileName=鱼香肉丝.jpg">下载</a>
+
+        <script type="text/javascript" src="js/jquery-1.12.2.min.js"></script>
+        <!--  该js库中提供了支持异步文件上传的函数 -->
+        <script type="text/javascript" src="js/jquery.form.min.js"></script>
+        <script type="text/javascript">
+            $("form").submit(function(){
+                // $.ajax() 不能异步上传文件
+                // ajaxSubmit() 是jquery.form中提供的方法
+                $("form").ajaxSubmit({
+                    type:"post",
+                    url:"upload2.do",
+                    data:$("form").serialize(),
+                    dataType:"json",
+                    success:function(data){
+                        if(data.code == 1){
+                            window.parent.updateHead();
+                        }else{
+                            alert(data.info);
+                        }
+                    }
+                })
+                return false;
+            });
+
+
+        </script>
+
+  </body>
+</html>
