@@ -25,6 +25,7 @@ public class CommonException {
             message = iterator.next().getMessage();
             System.out.println(message);
         }
+        System.out.println("");
         return new JsonResult(0, "验证异常");
     }
 
